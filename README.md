@@ -61,7 +61,7 @@ webdriver.showMessage(appid, pageid, msgtype, title, message, duration, sid)
 
 # 链接
 
-[帮助中心](http://help.webdriver.top/guide/js.html)
+[帮助中心](http://help.webdriver.top/v2/guide/js.html)
 
 # 作者
 
