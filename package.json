@@ -7,7 +7,8 @@
   "author": "meixuan no.1<postmaster@webdriver.top>",
   "license": "MIT",
   "scripts": {
-    "test": "node examples/index"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "examples": "node examples/index"
   },
   "main": "main/api.js",
   "repository": {
