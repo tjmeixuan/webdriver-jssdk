@@ -33,7 +33,7 @@ api.prototype.makeSign = function(appid, accesskey, secretkey, strnow){
 
 //连接应用
 api.prototype.connect = function(options) {
-    if (!options || !options.appid || options.accesskey || options.secretkey) {
+    if (!options || !options.appid || !options.accesskey || !options.secretkey) {
         throw new Error('[webdriver-jssdk] error options');
     }
 
