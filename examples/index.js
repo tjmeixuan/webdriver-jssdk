@@ -103,7 +103,6 @@ var connectStateCallback = function(appid, state){
 
 //连接平台
 var options = {
-    serverip: '127.0.0.1',
     appid: Demo,
     accesskey: Accesskey,
     secretkey: Secretkey,

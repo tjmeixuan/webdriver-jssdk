@@ -2,8 +2,6 @@ var _ = require('lodash');
 var mqtt = require('mqtt');
 var crypto = require('crypto');
 
-const MQTT_SSL = true;
-const MQTT_PORT = 8103;
 const MQTT_PORT_S = 8104;
 
 function api(){
@@ -16,9 +14,18 @@ function api(){
         //     mqttclient: null,
         //     mqttstate: false,
         //     notice_callback: null,
-        //     connectstate_callback: null
+        //     connectstate_callback: null,
         // }
-    ];
+    ],
+    this.values = [
+        {
+            // appid: '',
+            // pageid: '',
+            // wid: '',
+            // name: '',
+            // value: ''
+        }
+    ]
 }
 module.exports = new api();
 
@@ -33,7 +40,7 @@ api.prototype.makeSign = function(appid, accesskey, secretkey, strnow){
 
 //连接应用
 api.prototype.connect = function(options) {
-    if (!options || !options.appid || !options.accesskey || !options.secretkey) {
+    if (!options || !options.appid || options.accesskey || options.secretkey) {
         throw new Error('[webdriver-jssdk] error options');
     }
 
@@ -76,11 +83,9 @@ api.prototype.connect = function(options) {
     if(serverip !== ''){
         ip = serverip
     }
-    var mqtt_server_url = 'mqtt://' + ip + ':' + MQTT_PORT;
-    if (MQTT_SSL) {
-        mqtt_server_url = 'tls://' + ip + ':' + MQTT_PORT_S;
-        options.rejectUnauthorized = false
-    }
+    var mqtt_server_url = 'tls://' + ip + ':' + MQTT_PORT_S
+    options.rejectUnauthorized = false
+
     client.mqttclient = mqtt.connect(mqtt_server_url, options);
     if(client.mqttclient != null){
         client.mqttclient.on('connect', function () {
@@ -144,6 +149,17 @@ api.prototype.connect = function(options) {
                         topic_parsed.sid,
                         message.toString()
                     );
+                    //缓存最新值
+                    t.values = t.values.filter(function(o){
+                        return !(o.appid == topic_parsed.appid && o.pageid == topic_parsed.pageid && o.wid == topic_parsed.wid && o.name == topic_parsed.name)
+                    })
+                    t.values.push({
+                        appid: topic_parsed.appid,
+                        pageid: topic_parsed.pageid,
+                        wid: topic_parsed.wid,
+                        name: topic_parsed.name,
+                        value: message.toString()
+                    })
                 }
             }
         });
@@ -195,6 +211,27 @@ api.prototype.write = function(appid, pageid, wid, name, sid, value){
             strpayload = JSON.stringify(value)
         }
         client.mqttclient.publish(topic, strpayload);
+        //缓存最新值
+        t.values = t.values.filter(function(o){
+            return !(o.appid == appid && o.pageid == pageid && o.wid == wid && o.name == name)
+        })
+        t.values.push({
+            appid: appid,
+            pageid: pageid,
+            wid: wid,
+            name: name,
+            value: strpayload
+        })
+    }
+}
+
+api.prototype.read = function(appid, pageid, wid, name){
+    var t = this
+    var des = _.find(t.values, function(o){
+        return o.appid == appid && o.pageid == pageid && o.wid == wid && o.name == name
+    })
+    if(des){
+        return des.value
     }
 }
 

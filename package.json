@@ -1,7 +1,7 @@
 {
   "name": "webdriver-jssdk",
   "description": "A library for webdriver sdk base on nodejs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "http://www.webdriver.top",
   "keywords": [
     "webdriver, jssdk"
