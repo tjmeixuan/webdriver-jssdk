@@ -1,4 +1,4 @@
-# webdriver-jssdk v0.0.2
+# webdriver-jssdk v0.0.3
 
 # 介绍
 

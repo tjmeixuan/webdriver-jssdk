@@ -40,7 +40,7 @@ api.prototype.makeSign = function(appid, accesskey, secretkey, strnow){
 
 //连接应用
 api.prototype.connect = function(options) {
-    if (!options || !options.appid || options.accesskey || options.secretkey) {
+    if (!options || !options.appid || !options.accesskey || !options.secretkey) {
         throw new Error('[webdriver-jssdk] error options');
     }
 
@@ -68,7 +68,7 @@ api.prototype.connect = function(options) {
     var strnow = Date.now()
     var sign = t.makeSign(appid, accesskey, secretkey, strnow)
 
-    var options = {
+    var _options = {
         username: accesskey,
         password: sign,
         keepalive: 60,
@@ -84,9 +84,9 @@ api.prototype.connect = function(options) {
         ip = serverip
     }
     var mqtt_server_url = 'tls://' + ip + ':' + MQTT_PORT_S
-    options.rejectUnauthorized = false
+    _options.rejectUnauthorized = false
 
-    client.mqttclient = mqtt.connect(mqtt_server_url, options);
+    client.mqttclient = mqtt.connect(mqtt_server_url, _options);
     if(client.mqttclient != null){
         client.mqttclient.on('connect', function () {
             client.mqttstate = true;
